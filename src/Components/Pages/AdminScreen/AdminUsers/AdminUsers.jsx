@@ -8,6 +8,7 @@ import {
   Modal,
   Image,
   StyleSheet,
+  RefreshControl,
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../../Context/AuthProvider";
@@ -22,7 +23,7 @@ const AdminUsers = ({ navigation }) => {
   const { user } = useContext(AuthContext);
   const [allUser, setAllUser] = useState([]);
   const [checkUser, setCheckUser] = useState({});
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [modal, setModal] = useState(false);
 
   const handleUsersDelete = async (id) => {
@@ -39,7 +40,8 @@ const AdminUsers = ({ navigation }) => {
     } catch (err) {}
   };
 
-  useEffect(() => {
+  const handleRefresh = () => {
+    setLoading(true);
     axios
       .get(`${BaseURL}/api/auth/all-users`)
       .then((res) => {
@@ -49,17 +51,21 @@ const AdminUsers = ({ navigation }) => {
       .catch((err) => {
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    handleRefresh();
   }, []);
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "black" }}>
       {/* Header Section */}
       <Header navigation={navigation} />
 
       {/* Body Section */}
       <View
         style={{
-          backgroundColor: "#fff",
+          backgroundColor: "#464755",
           borderRadius: 20,
           margin: 10,
           elevation: 3,
@@ -86,59 +92,53 @@ const AdminUsers = ({ navigation }) => {
           </Text>
         </View>
 
-        {loading ? (
-          <ActivityIndicator
-            style={{
-              flex: 1,
-              justifyContent: "center",
-              alignItems: "center",
-              marginTop: 20,
-            }}
-            size="large"
-            color="#1E3A8A"
-          />
-        ) : (
-          <FlatList
-            data={allUser}
-            keyExtractor={(item) => item._id}
-            renderItem={({ item }) => {
-              return (
-                <View style={styles.container}>
-                  <View style={styles.infoContainer}>
-                    <Text style={styles.name}>
-                      {item.firstName + " " + item.lastName}
-                    </Text>
-                    <Text style={styles.email}>{item.email}</Text>
-                    <Text style={styles.amount}>
-                      Total Balance: ${item.totalBalance}
-                    </Text>
-                    <Text style={styles.date}>
-                      Joining Date: {moment(item.date).format("DD MMM")}
-                    </Text>
-                    <Text style={styles.statusActive}>Active</Text>
-                  </View>
-                  <View style={styles.iconsContainer}>
-                    <TouchableOpacity
-                      style={[styles.iconButton, styles.eyeButton]}
-                      onPress={() => {
-                        setModal(true);
-                        setCheckUser(item);
-                      }}
-                    >
-                      <EyeIcon name="eye" size={20} color="#FFA500" />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={[styles.iconButton, styles.deleteButton]}
-                      onPress={() => handleUsersDelete(item._id)}
-                    >
-                      <Text style={styles.deleteText}>Delete</Text>
-                    </TouchableOpacity>
-                  </View>
+        <FlatList
+          data={allUser}
+          keyExtractor={(item) => item._id}
+          renderItem={({ item }) => {
+            return (
+              <View style={styles.container}>
+                <View style={styles.infoContainer}>
+                  <Text style={styles.name}>
+                    {item.firstName + " " + item.lastName}
+                  </Text>
+                  <Text style={styles.email}>{item.email}</Text>
+                  <Text style={styles.amount}>
+                    Total Balance: ${item.totalBalance}
+                  </Text>
+                  <Text style={styles.date}>
+                    Joining Date: {moment(item.date).format("DD MMM")}
+                  </Text>
+                  <Text style={styles.statusActive}>Active</Text>
                 </View>
-              );
-            }}
-          />
-        )}
+                <View style={styles.iconsContainer}>
+                  <TouchableOpacity
+                    style={[styles.iconButton, styles.eyeButton]}
+                    onPress={() => {
+                      setModal(true);
+                      setCheckUser(item);
+                    }}
+                  >
+                    <EyeIcon name="eye" size={20} color="#FFA500" />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.iconButton, styles.deleteButton]}
+                    onPress={() => handleUsersDelete(item._id)}
+                  >
+                    <Text style={styles.deleteText}>Delete</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            );
+          }}
+          refreshControl={
+            <RefreshControl
+              refreshing={loading}
+              onRefresh={handleRefresh}
+              colors={["#1E3A8A"]}
+            />
+          }
+        />
       </View>
       <Modal animationType="slide" transparent={true} visible={modal}>
         <View style={styles.modalContainer}>
@@ -153,9 +153,9 @@ const AdminUsers = ({ navigation }) => {
               />
             </View>
             <View style={styles.userContainer}>
-              {user?.image ? (
+              {checkUser?.image ? (
                 <Image
-                  source={{ uri: `${user?.image}` }}
+                  source={{ uri: `${checkUser?.image}` }}
                   style={{
                     width: 80,
                     height: 80,
@@ -176,7 +176,7 @@ const AdminUsers = ({ navigation }) => {
                   }}
                 />
               )}
-              <Text style={styles.userEmail}>istiakahmed@gmail.com</Text>
+              <Text style={styles.userEmail}>{checkUser?.email}</Text>
             </View>
 
             <View style={styles.transactionInfoContainer}>
@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
     padding: 15,
     borderWidth: 1,
     borderColor: "#ccc",
-    backgroundColor: "#fff",
+    backgroundColor: "#616672",
     marginHorizontal: 10,
     marginTop: 10,
     borderRadius: 10,
@@ -225,22 +225,22 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 5,
-    color: "#333",
+    color: "white",
   },
   email: {
     fontSize: 14,
-    color: "#666",
+    color: "#ffffffa4",
     marginBottom: 5,
   },
   amount: {
     fontSize: 16,
     fontWeight: "bold",
     marginBottom: 5,
-    color: "#1C3B8A",
+    color: "white",
   },
   date: {
     fontSize: 14,
-    color: "#888",
+    color: "#ffffffc6",
     marginBottom: 5,
   },
   statusActive: {
@@ -276,7 +276,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContent: {
-    backgroundColor: "white",
+    backgroundColor: "#6F7680",
     padding: 20,
     borderRadius: 10,
     width: "80%",
@@ -290,6 +290,7 @@ const styles = StyleSheet.create({
   modalHeaderText: {
     fontSize: 18,
     fontWeight: "bold",
+    color: "white",
   },
   userContainer: {
     flexDirection: "row",
@@ -304,6 +305,7 @@ const styles = StyleSheet.create({
   },
   userEmail: {
     fontSize: 16,
+    color: "white",
   },
   transactionInfoContainer: {
     marginBottom: 10,
@@ -312,12 +314,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 5,
     fontWeight: "bold",
-    color: "orange",
+    color: "white",
   },
   additionalInfoText: {
     fontSize: 14,
     marginBottom: 3,
-    color: "gray",
+    color: "#ffffffaf",
   },
 });
 

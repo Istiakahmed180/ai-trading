@@ -10,6 +10,7 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../../Context/AuthProvider";
 import axios from "axios";
 import Header from "../../../Shared/Header/Header";
+import { BaseURL } from "../../../Shared/BaseURL/BaseURL";
 
 const UserDashboard = ({ navigation }) => {
   const { user, refreshUser } = useContext(AuthContext);
@@ -27,7 +28,7 @@ const UserDashboard = ({ navigation }) => {
   };
 
   const calculateTotalAmount = () => {
-    const total = depositData.reduce((sum, currentObject) => {
+    const total = depositData?.reduce((sum, currentObject) => {
       return sum + currentObject?.clientDeposit;
     }, 0);
     setTotalAmount(total);
@@ -69,7 +70,7 @@ const UserDashboard = ({ navigation }) => {
           <View>
             <Text style={styles.welcomeBackText}>Hi, Welcomeback!</Text>
             <Text style={styles.userName}>
-              Me {user?.firstName + " " + user?.lastName}
+              {user?.firstName + " " + user?.lastName}
             </Text>
             <Text style={styles.email}>{user?.email}</Text>
             <Text style={styles.bangladeshText}>Bangladesh</Text>
@@ -79,7 +80,7 @@ const UserDashboard = ({ navigation }) => {
               <View>
                 <Text style={styles.currentBalanceText}>Current Balance</Text>
                 <Text style={styles.currentBalanceText1}>
-                  ${user?.currentBalance}
+                  ${user?.currentBalance.toFixed(2)}
                 </Text>
               </View>
             </View>
@@ -87,7 +88,7 @@ const UserDashboard = ({ navigation }) => {
               <View>
                 <Text style={styles.totalDepositText}>Total Deposit</Text>
                 <Text style={styles.totalDepositText1}>
-                  ${totalAmount.toFixed()}
+                  ${totalAmount.toFixed(2)}
                 </Text>
               </View>
             </View>
@@ -97,7 +98,7 @@ const UserDashboard = ({ navigation }) => {
               <View>
                 <Text style={styles.withdrawAmountText}>Withdraw Amount</Text>
                 <Text style={styles.withdrawAmountText1}>
-                  ${user?.withdrawalBalance}
+                  ${user?.withdrawalBalance.toFixed(2)}
                 </Text>
               </View>
             </View>
@@ -121,15 +122,23 @@ const styles = StyleSheet.create({
 
   bangladeshText: { fontSize: 18, color: "#1870D5", fontWeight: "500" },
 
-  balanchContainer: { flexDirection: "row", justifyContent: "space-around" },
+  balanchContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    columnGap: 20,
+  },
 
   currentBalanchWrapper: {
     marginTop: 40,
     flexDirection: "row",
     justifyContent: "space-around",
+    backgroundColor: "#272B3D",
+    borderRadius: 10,
+    width: "50%",
+    paddingVertical: 15,
   },
 
-  currentBalanceText: { color: "#B0B0B8", fontSize: 15, fontWeight: "500" },
+  currentBalanceText: { color: "#B0B0B8", fontSize: 18, fontWeight: "500" },
 
   currentBalanceText1: {
     color: "#B4B4BC",
@@ -143,9 +152,13 @@ const styles = StyleSheet.create({
     marginTop: 40,
     flexDirection: "row",
     justifyContent: "space-around",
+    backgroundColor: "#272B3D",
+    borderRadius: 10,
+    width: "50%",
+    paddingVertical: 15,
   },
 
-  totalDepositText: { color: "#B0B0B8", fontSize: 15, fontWeight: "500" },
+  totalDepositText: { color: "#B0B0B8", fontSize: 18, fontWeight: "500" },
 
   totalDepositText1: {
     color: "#B4B4BC",
@@ -158,12 +171,16 @@ const styles = StyleSheet.create({
   withdrawAmount: { flexDirection: "row", justifyContent: "space-around" },
 
   withdrawAmountWrapper: {
-    marginTop: 40,
+    marginTop: 10,
     flexDirection: "row",
     justifyContent: "space-around",
+    backgroundColor: "#272B3D",
+    borderRadius: 10,
+    width: "50%",
+    paddingVertical: 15,
   },
 
-  withdrawAmountText: { color: "#B0B0B8", fontSize: 15, fontWeight: "500" },
+  withdrawAmountText: { color: "#B0B0B8", fontSize: 18, fontWeight: "500" },
 
   withdrawAmountText1: {
     color: "#B4B4BC",

@@ -25,7 +25,6 @@ const AuthProvider = ({ children }) => {
         ["accessToken", token],
       ]);
     } catch (error) {
-      console.error("Login error:", error);
     } finally {
       setIsLoading(false);
     }
@@ -62,9 +61,7 @@ const AuthProvider = ({ children }) => {
       setUser(userData);
 
       await AsyncStorage.setItem("user", JSON.stringify(userData));
-    } catch (error) {
-      console.error("Refresh user info error:", error);
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {

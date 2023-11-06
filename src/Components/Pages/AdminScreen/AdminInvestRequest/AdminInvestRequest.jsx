@@ -14,6 +14,7 @@ import { AuthContext } from "../../../../Context/AuthProvider";
 import axios from "axios";
 import { BaseURL } from "../../../Shared/BaseURL/BaseURL";
 import Header from "../../../Shared/Header/Header";
+import moment from "moment";
 
 const AdminInvestRequest = ({ navigation }) => {
   const { token } = useContext(AuthContext);
@@ -31,9 +32,7 @@ const AdminInvestRequest = ({ navigation }) => {
         setPendingRequest(filter);
         ToastAndroid.show(data?.message, ToastAndroid.LONG);
       }
-    } catch (error) {
-      console.error("Error approving data:", error.message);
-    }
+    } catch (error) {}
   };
 
   const handleInvestRequestDelete = async (id) => {
@@ -167,11 +166,10 @@ const AdminInvestRequest = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
-    marginBottom: 16,
     borderRadius: 8,
-    marginTop: 8,
     marginHorizontal: 10,
     backgroundColor: "#616672",
+    marginTop: 12,
   },
   name: {
     fontSize: 18,

@@ -125,7 +125,7 @@ const AdminReceiveHistory = ({ navigation }) => {
                       style={{
                         fontSize: 16,
                         marginBottom: 5,
-                        color: "#E9E9E9",
+                        color: "white",
                       }}
                     >
                       Receiver Name: {item?.name}
@@ -134,7 +134,7 @@ const AdminReceiveHistory = ({ navigation }) => {
                       style={{
                         fontSize: 16,
                         marginBottom: 5,
-                        color: "#E9E9E9",
+                        color: "white",
                       }}
                     >
                       Receiver Email: {item?.email}
@@ -276,9 +276,9 @@ const AdminReceiveHistory = ({ navigation }) => {
                 marginBottom: 15,
               }}
             >
-              {user?.image ? (
+              {checkData?.senderImage ? (
                 <Image
-                  source={{ uri: `${user?.image}` }}
+                  source={{ uri: `${checkData?.senderImage}` }}
                   style={{
                     width: 80,
                     height: 80,

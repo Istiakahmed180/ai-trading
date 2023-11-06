@@ -43,7 +43,6 @@ const UserTransaction = ({ navigation }) => {
         setIsRefreshing(false);
       })
       .catch((error) => {
-        console.error("Error refreshing user data:", error);
         setIsRefreshing(false);
       });
   }, []);

@@ -5,6 +5,7 @@ import {
   ActivityIndicator,
   FlatList,
   StyleSheet,
+  RefreshControl,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
@@ -14,34 +15,35 @@ import moment from "moment";
 
 const AdminProfit = ({ navigation }) => {
   const [adminProfit, setAdminProfit] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const handleRefreshing = async () => {
+    setRefreshing(true);
+    try {
+      const getAdminProfit = await axios.get(
+        `${BaseURL}/api/profit/get-admin-profit`
+      );
+      const data = await getAdminProfit.data;
+      setAdminProfit(data.data);
+      setRefreshing(false);
+    } catch (error) {
+      setRefreshing(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const getAdminProfit = await axios.get(
-          `${BaseURL}/api/profit/get-admin-profit`
-        );
-        const data = await getAdminProfit.data;
-        setAdminProfit(data.data);
-        setLoading(false);
-      } catch (error) {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
+    handleRefreshing();
   }, []);
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "black" }}>
       {/* Header Section */}
       <Header navigation={navigation} />
 
       {/* Body Section */}
       <View
         style={{
-          backgroundColor: "#fff",
+          backgroundColor: "#1C1C2E",
           borderRadius: 20,
           margin: 10,
           elevation: 3,
@@ -68,60 +70,54 @@ const AdminProfit = ({ navigation }) => {
           </Text>
         </View>
 
-        {loading ? (
-          <ActivityIndicator
-            style={{
-              flex: 1,
-              justifyContent: "center",
-              alignItems: "center",
-              marginTop: 20,
-            }}
-            size="large"
-            color="#1E3A8A"
-          />
-        ) : (
-          <FlatList
-            data={adminProfit}
-            keyExtractor={(item) => item._id}
-            renderItem={({ item }) => {
-              return (
-                <View style={styles.container}>
-                  <View style={styles.infoContainer}>
-                    <Text style={styles.name}>{item.name}</Text>
-                    <Text style={styles.email}>{item.email}</Text>
-                    <Text style={styles.date}>
-                      {moment(item.date).format("DD MMM")}
-                    </Text>
-                  </View>
-                  <View style={styles.amountContainer}>
-                    <Text style={styles.amount}>${item.vat}</Text>
-                  </View>
+        <FlatList
+          data={adminProfit}
+          keyExtractor={(item) => item._id}
+          renderItem={({ item }) => {
+            return (
+              <View style={styles.container}>
+                <View style={styles.infoContainer}>
+                  <Text style={styles.name}>{item.name}</Text>
+                  <Text style={styles.email}>{item.email}</Text>
+                  <Text style={styles.date}>
+                    {moment(item.date).format("DD MMM")}
+                  </Text>
                 </View>
-              );
-            }}
-            ListEmptyComponent={() => {
-              <View
+                <View style={styles.amountContainer}>
+                  <Text style={styles.amount}>${item.vat}</Text>
+                </View>
+              </View>
+            );
+          }}
+          ListEmptyComponent={() => {
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text
                 style={{
-                  flex: 1,
-                  justifyContent: "center",
-                  alignItems: "center",
+                  fontSize: 18,
+                  textAlign: "center",
+                  marginTop: 40,
+                  color: "red",
+                  fontWeight: "bold",
                 }}
               >
-                <Text
-                  style={{
-                    fontSize: 18,
-                    textAlign: "center",
-                    marginTop: 40,
-                    color: "red",
-                    fontWeight: "bold",
-                  }}
-                >
-                  Admin Profit Data Is Not Available
-                </Text>
-              </View>;
-            }}
-          />
-        )}
+                Admin Profit Data Is Not Available
+              </Text>
+            </View>;
+          }}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={handleRefreshing}
+              colors={["#1E3A8A"]}
+            />
+          }
+        />
       </View>
     </SafeAreaView>
   );
@@ -130,10 +126,9 @@ const AdminProfit = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    backgroundColor: "#ffffff",
+    backgroundColor: "#616672",
     padding: 15,
     borderRadius: 10,
-    marginBottom: 10,
     alignItems: "center",
     justifyContent: "space-between",
     shadowColor: "#000",
@@ -152,25 +147,26 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 5,
+    color: "white",
   },
   email: {
     fontSize: 16,
-    color: "#555555",
+    color: "#d4cfcf",
     marginBottom: 5,
   },
   date: {
     fontSize: 14,
-    color: "#777777",
+    color: "red",
   },
   amountContainer: {
-    backgroundColor: "#e0e0e0",
+    backgroundColor: "#606672",
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
   },
   amount: {
     fontSize: 16,
-    color: "green",
+    color: "orange",
     fontWeight: "bold",
   },
 });

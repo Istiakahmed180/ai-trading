@@ -7,15 +7,13 @@ import {
   Image,
   StyleSheet,
 } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../../../../Context/AuthProvider";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { BaseURL } from "../../../Shared/BaseURL/BaseURL";
 import Header from "../../../Shared/Header/Header";
 import moment from "moment";
 
 const AdminDashboard = ({ navigation }) => {
-  const { user } = useContext(AuthContext);
   const [recentUsers, setRecentUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [vatSumByMonth, setVatSumByMonth] = useState([]);
@@ -24,11 +22,10 @@ const AdminDashboard = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
 
   const groupByMonth = (data) => {
-    return data.reduce((groups, item) => {
+    return data?.reduce((groups, item) => {
       const date = new Date(item?.date);
       const month = date.getMonth() + 1;
       const year = date.getFullYear();
-
       const key = `${year}-${month}`;
       if (!groups[key]) {
         groups[key] = [];
@@ -44,16 +41,16 @@ const AdminDashboard = ({ navigation }) => {
 
     return Object.keys(groupedData).map((key) => ({
       month: key,
-      sum: groupedData[key].reduce((acc, value) => acc + value, 0),
+      sum: groupedData[key]?.reduce((acc, value) => acc + value, 0),
     }));
   };
 
-  const totalDeduction = dailyProfit.reduce(
+  const totalDeduction = dailyProfit?.reduce(
     (sum, item) => sum + item.deductionPercentAmount,
     0
   );
 
-  const totalAdminiProfit = totalProfit.reduce(
+  const totalAdminiProfit = totalProfit?.reduce(
     (sum, item) => sum + item.vat,
     0
   );
@@ -68,11 +65,12 @@ const AdminDashboard = ({ navigation }) => {
       const getAdminProfit = await axios.get(
         `${BaseURL}/api/profit/get-admin-profit`
       );
-      const data = getAdminProfit.data.data;
-      setTotalProfit(data);
+      const data = getAdminProfit?.data?.data;
 
-      const currentMonthData = data.filter((item) => {
-        const date = new Date(item.date);
+      setTotalProfit(data);
+      const currentMonthData = data?.filter((item) => {
+        const date = new Date(item?.date);
+
         const month = date.getMonth() + 1;
         const year = date.getFullYear();
         return month === currentMonth && year === currentYear;
@@ -169,7 +167,7 @@ const AdminDashboard = ({ navigation }) => {
                 fontSize: 20,
               }}
             >
-              $ {totalAdminiProfit}
+              $ {totalAdminiProfit === undefined ? 0 : totalAdminiProfit}
             </Text>
           </View>
           <View
@@ -199,7 +197,8 @@ const AdminDashboard = ({ navigation }) => {
                 fontSize: 20,
               }}
             >
-              $ {vatSumByMonth[0]?.sum}
+              ${" "}
+              {vatSumByMonth[0]?.sum === undefined ? 0 : vatSumByMonth[0]?.sum}
             </Text>
           </View>
           <View
@@ -234,55 +233,76 @@ const AdminDashboard = ({ navigation }) => {
           </View>
           <View style={styles.container}>
             <Text style={styles.title}>Recent Client</Text>
-            {recentUsers?.map((item) => (
-              <View key={item?._id} style={styles.userItem}>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    {user?.image ? (
-                      <Image
-                        source={{ uri: `${user?.image}` }}
+            {recentUsers.length > 0 ? (
+              <>
+                {recentUsers?.map((item) => (
+                  <View key={item?._id} style={styles.userItem}>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <View
+                        style={{ flexDirection: "row", alignItems: "center" }}
+                      >
+                        {item?.image ? (
+                          <Image
+                            source={{ uri: `${item?.image}` }}
+                            style={{
+                              width: 80,
+                              height: 80,
+                              borderRadius: 40,
+                              marginRight: 15,
+                            }}
+                          />
+                        ) : (
+                          <Image
+                            source={{
+                              uri: "https://img.freepik.com/premium-vector/handsome-businessman-suit_88465-811.jpg?w=740",
+                            }}
+                            style={{
+                              width: 80,
+                              height: 80,
+                              borderRadius: 40,
+                              marginRight: 15,
+                            }}
+                          />
+                        )}
+                        <Text style={styles.userName}>
+                          {item.firstName} {item.lastName}
+                        </Text>
+                      </View>
+                      <Text
                         style={{
-                          width: 80,
-                          height: 80,
-                          borderRadius: 40,
-                          marginRight: 15,
+                          fontSize: 15,
+                          color: "#E5E7EB",
+                          fontWeight: "600",
                         }}
-                      />
-                    ) : (
-                      <Image
-                        source={{
-                          uri: "https://img.freepik.com/premium-vector/handsome-businessman-suit_88465-811.jpg?w=740",
-                        }}
-                        style={{
-                          width: 80,
-                          height: 80,
-                          borderRadius: 40,
-                          marginRight: 15,
-                        }}
-                      />
-                    )}
-                    <Text style={styles.userName}>
-                      {item.firstName} {item.lastName}
-                    </Text>
+                      >
+                        {moment(item.date).format("DD MMM")}
+                      </Text>
+                    </View>
                   </View>
+                ))}
+              </>
+            ) : (
+              <>
+                <View style={{ flex: 1 }}>
                   <Text
                     style={{
-                      fontSize: 15,
-                      color: "#E5E7EB",
-                      fontWeight: "600",
+                      color: "red",
+                      textAlign: "center",
+                      marginTop: 20,
+                      fontSize: 20,
                     }}
                   >
-                    {moment(item.date).format("DD MMM")}
+                    Not Found
                   </Text>
                 </View>
-              </View>
-            ))}
+              </>
+            )}
           </View>
         </View>
       </ScrollView>

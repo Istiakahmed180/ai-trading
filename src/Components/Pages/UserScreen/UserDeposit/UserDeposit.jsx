@@ -171,7 +171,7 @@ const UserDeposit = ({ navigation }) => {
                     {item.depositAmount ? (
                       <Text
                         style={{
-                          color: "green",
+                          color: "#002f80",
                           fontSize: 18,
                           fontWeight: "bold",
                         }}

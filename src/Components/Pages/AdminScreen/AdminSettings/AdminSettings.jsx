@@ -4,8 +4,7 @@ import Header from "../../../Shared/Header/Header";
 
 const AdminSettings = ({ navigation }) => {
   return (
-    <ImageBackground
-      source={require("../../../../../assets/Body-Background.jpg")}
+    <View
       style={{
         flex: 1,
         resizeMode: "cover",
@@ -15,7 +14,7 @@ const AdminSettings = ({ navigation }) => {
         height: "100%",
       }}
     >
-      <View style={{ flex: 1, backgroundColor: "rgba(0, 0, 0, 0.5)" }}>
+      <View style={{ flex: 1, backgroundColor: "#464755" }}>
         <SafeAreaView style={{ flex: 1 }}>
           {/* Header Section */}
           <Header navigation={navigation} />
@@ -28,11 +27,11 @@ const AdminSettings = ({ navigation }) => {
               alignItems: "center",
             }}
           >
-            <Text style={{ color: "white" }}>Admin Settings</Text>
+            <Text style={{ color: "white" }}>Coming Soon</Text>
           </View>
         </SafeAreaView>
       </View>
-    </ImageBackground>
+    </View>
   );
 };
 

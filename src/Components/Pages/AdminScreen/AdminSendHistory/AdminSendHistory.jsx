@@ -125,7 +125,7 @@ const AdminSendHistory = ({ navigation }) => {
                       style={{
                         fontSize: 18,
                         marginBottom: 5,
-                        color: "#B5B5B5",
+                        color: "white",
                         fontWeight: "700",
                       }}
                     >
@@ -135,7 +135,7 @@ const AdminSendHistory = ({ navigation }) => {
                       style={{
                         fontSize: 16,
                         marginBottom: 5,
-                        color: "#B0B0B8",
+                        color: "white",
                       }}
                     >
                       Sender Email: {item?.email}
@@ -163,8 +163,7 @@ const AdminSendHistory = ({ navigation }) => {
                   </View>
                   <Text
                     style={{
-                      fontSize: 18,
-                      fontWeight: "bold",
+                      fontSize: 16,
                       marginBottom: 15,
                       color: "#fff",
                     }}
@@ -276,9 +275,9 @@ const AdminSendHistory = ({ navigation }) => {
                 marginBottom: 15,
               }}
             >
-              {user?.image ? (
+              {checkData?.receiverImage ? (
                 <Image
-                  source={{ uri: `${user?.image}` }}
+                  source={{ uri: `${checkData?.receiverImage}` }}
                   style={{
                     width: 80,
                     height: 80,

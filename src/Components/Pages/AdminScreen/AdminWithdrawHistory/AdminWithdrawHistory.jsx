@@ -190,8 +190,7 @@ const styles = StyleSheet.create({
   amount: {
     fontSize: 16,
     marginBottom: 2,
-    color: "#E9E9E9",
-    fontWeight: "bold",
+    color: "#e9e9e9ad",
   },
   date: {
     fontSize: 12,
