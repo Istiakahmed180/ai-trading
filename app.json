@@ -1,28 +1,26 @@
 {
   "expo": {
-    "name": "AI Trading",
-    "slug": "ai-trading",
+    "name": "HSD AI",
+    "slug": "hsd-ai",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/USA-AI-Treading-Logo.png",
+    "icon": "./assets/hsd_ai_logo.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#000000"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/USA-AI-Treading-Logo.png",
+        "foregroundImage": "./assets/hsd_ai_logo.png",
         "backgroundColor": "#000000"
       },
-      "package": "com.istiakahmedit180.aitrading",
+      "package": "com.istiakahmedit180.hsd.ai",
       "versionCode": 1
     },
     "web": {
@@ -30,7 +28,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "fabb1a9e-095d-49cf-a088-e91fd3e9f1e6"
+        "projectId": ""
       }
     }
   }

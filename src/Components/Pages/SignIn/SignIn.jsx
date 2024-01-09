@@ -27,7 +27,6 @@ import { Nunito_400Regular } from "@expo-google-fonts/nunito";
 const SignIn = ({ navigation }) => {
   const { login, isLoading, setIsLoading } = useContext(AuthContext);
   const [visible, setVisible] = useState(false);
-  const [checked, setChecked] = useState(false);
 
   const [userInfo, setUserInfo] = useState({
     email: "",
@@ -214,33 +213,11 @@ const SignIn = ({ navigation }) => {
               <Text style={styles.passwordErrorText}>{error.password}</Text>
             </View>
           )}
-          <View style={styles.rememberContainer}>
-            <CheckBox
-              containerStyle={styles.checkedContainer}
-              title={"Remember me"}
-              checked={checked}
-              onPress={() => setChecked(!checked)}
-              textStyle={styles.checkedText}
-              checkedColor="#7539FE"
-            />
-            <TouchableOpacity style={styles.forgotButtonContainer}>
-              <Text style={styles.forgotButtonText}>Forgot Password?</Text>
-            </TouchableOpacity>
-          </View>
         </View>
 
-        {checked ? (
-          <TouchableOpacity
-            style={styles.buttonContainer}
-            onPress={handleLogin}
-          >
-            <Text style={styles.buttonText}>Sign In</Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity disabled style={styles.buttonContainer1}>
-            <Text style={styles.buttonText1}>Sign In</Text>
-          </TouchableOpacity>
-        )}
+        <TouchableOpacity style={styles.buttonContainer} onPress={handleLogin}>
+          <Text style={styles.buttonText}>Sign In</Text>
+        </TouchableOpacity>
 
         <View style={styles.dontAccount}>
           <Text style={styles.dontAccountText}>Don't have an account?</Text>
