@@ -1,1 +1,1 @@
-export const BaseURL = "http://13.229.77.43";
+export const BaseURL = "https://ngo.hsdaitrading.com";
