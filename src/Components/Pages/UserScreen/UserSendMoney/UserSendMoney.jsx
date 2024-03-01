@@ -12,6 +12,7 @@ import {
   TextInput,
   Image,
   StyleSheet,
+  Dimensions,
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../../Context/AuthProvider";
@@ -464,17 +465,16 @@ const styles = StyleSheet.create({
 
   submitButton: {
     backgroundColor: "blue",
-    padding: 10,
     borderRadius: 5,
     alignItems: "center",
-    width: "40%",
+    paddingVertical: "4%",
+    paddingHorizontal: "5%",
   },
 
   submitButtonText: {
     color: "white",
-    fontWeight: "bold",
-    paddingHorizontal: 20,
-    fontSize: 15,
+    fontWeight: "500",
+    fontSize: Dimensions.get("window").width * 0.045,
   },
 
   submitButtonContainer: {

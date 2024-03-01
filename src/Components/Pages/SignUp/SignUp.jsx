@@ -248,7 +248,7 @@ const SignUp = ({ navigation }) => {
             />
             <TextInput
               style={styles.input}
-              placeholder="Surname"
+              placeholder="Last Name"
               placeholderTextColor={"#DDDCE2"}
               keyboardType="name-phone-pad"
               onChangeText={(value) =>

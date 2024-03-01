@@ -11,6 +11,7 @@ import {
   TextInput,
   TouchableHighlight,
   StyleSheet,
+  Dimensions,
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../../Context/AuthProvider";
@@ -313,10 +314,10 @@ const UserDeposit = ({ navigation }) => {
                   onPress={handelDeposit}
                   style={{
                     backgroundColor: "blue",
-                    padding: 10,
                     borderRadius: 5,
                     alignItems: "center",
-                    width: "40%",
+                    paddingVertical: "4%",
+                    paddingHorizontal: "5%",
                   }}
                 >
                   <Text
@@ -324,7 +325,7 @@ const UserDeposit = ({ navigation }) => {
                       color: "white",
                       fontWeight: "bold",
                       paddingHorizontal: 20,
-                      fontSize: 15,
+                      fontSize: Dimensions.get("window").width * 0.045,
                     }}
                   >
                     Submit

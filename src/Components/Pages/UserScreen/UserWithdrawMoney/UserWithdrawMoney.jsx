@@ -12,6 +12,7 @@ import {
   TouchableHighlight,
   Image,
   StyleSheet,
+  Dimensions,
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../../Context/AuthProvider";
@@ -257,18 +258,19 @@ const UserWithdrawMoney = ({ navigation }) => {
                   onPress={handleWithdrawRequest}
                   style={{
                     backgroundColor: "blue",
-                    padding: 10,
+
                     borderRadius: 5,
                     alignItems: "center",
-                    width: "40%",
+                    paddingVertical: "4%",
+                    paddingHorizontal: "5%",
                   }}
                 >
                   <Text
                     style={{
                       color: "white",
-                      fontWeight: "bold",
+                      fontWeight: "500",
                       paddingHorizontal: 20,
-                      fontSize: 15,
+                      fontSize: Dimensions.get("window").width * 0.045,
                     }}
                   >
                     Submit

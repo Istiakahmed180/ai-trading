@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     marginHorizontal: "5%",
   },
   title: {
-    fontSize: Dimensions.get("window").width * 0.05,
+    fontSize: Dimensions.get("window").width * 0.04,
     color: "#91909A",
     fontWeight: "bold",
   },
