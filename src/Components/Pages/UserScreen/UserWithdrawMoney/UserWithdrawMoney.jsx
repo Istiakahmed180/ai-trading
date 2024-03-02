@@ -258,7 +258,6 @@ const UserWithdrawMoney = ({ navigation }) => {
                   onPress={handleWithdrawRequest}
                   style={{
                     backgroundColor: "blue",
-
                     borderRadius: 5,
                     alignItems: "center",
                     paddingVertical: "4%",
@@ -269,7 +268,6 @@ const UserWithdrawMoney = ({ navigation }) => {
                     style={{
                       color: "white",
                       fontWeight: "500",
-                      paddingHorizontal: 20,
                       fontSize: Dimensions.get("window").width * 0.045,
                     }}
                   >

@@ -114,7 +114,7 @@ const UserAddMoney = ({ navigation }) => {
                       {moment(item?.date).format("DD MMM")}
                     </Text>
                     <Text style={styles.investmentAmount}>
-                      Investment Amount : ${item?.amount}
+                      Added Money : ${item?.amount}
                     </Text>
                   </View>
                   <TouchableOpacity onPress={() => setModal(true)}>

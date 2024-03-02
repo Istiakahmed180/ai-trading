@@ -92,7 +92,7 @@ const UserDashboard = ({ navigation }) => {
           </View>
           <View style={styles.withdrawContainer}>
             <View style={styles.withdrawBox}>
-              <Text style={styles.withdrawTitle}>Withdraw Amount</Text>
+              <Text style={styles.withdrawTitle}>Daily Profit</Text>
               <Text style={styles.withdrawAmount}>
                 ${user?.withdrawalBalance.toFixed(2)}
               </Text>

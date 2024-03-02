@@ -213,10 +213,10 @@ const UserDeposit = ({ navigation }) => {
                           <Text
                             style={[
                               styles.buttonText,
-                              { color: "gray", fontWeight: "bold" },
+                              { color: "lightgrey", fontWeight: "bold" },
                             ]}
                           >
-                            Pending Now
+                            Withdraw
                           </Text>
                         ) : (
                           <Text style={styles.buttonText}>Withdraw Now</Text>
@@ -324,7 +324,6 @@ const UserDeposit = ({ navigation }) => {
                     style={{
                       color: "white",
                       fontWeight: "bold",
-                      paddingHorizontal: 20,
                       fontSize: Dimensions.get("window").width * 0.045,
                     }}
                   >
