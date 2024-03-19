@@ -20,17 +20,13 @@ import { BaseURL } from "../../../Shared/BaseURL/BaseURL";
 import axios from "axios";
 import Header from "../../../Shared/Header/Header";
 import { Ionicons } from "@expo/vector-icons";
-import Icon from "react-native-vector-icons/Ionicons";
 import moment from "moment";
-import EyeIcon from "@expo/vector-icons/Feather";
 
 const UserAddMoney = ({ navigation }) => {
   const { user } = useContext(AuthContext);
   const [modalVisible, setModalVisible] = useState(false);
   const [amount, setAmount] = useState(null);
   const [userInvestmentData, setUserInvestmentData] = useState([]);
-  const [viewingModal, setViewingModal] = useState({});
-  const [modal, setModal] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleSubmitAmount = async () => {
@@ -117,14 +113,9 @@ const UserAddMoney = ({ navigation }) => {
                       Added Money : ${item?.amount}
                     </Text>
                   </View>
-                  <TouchableOpacity onPress={() => setModal(true)}>
-                    <EyeIcon
-                      onPress={() => setViewingModal(item)}
-                      name="eye"
-                      size={25}
-                      color={"#388DEC"}
-                    />
-                  </TouchableOpacity>
+                  <Text style={styles.investmentAmount}>
+                    {item?.approvalStatus}
+                  </Text>
                 </View>
               );
             }}
@@ -183,62 +174,6 @@ const UserAddMoney = ({ navigation }) => {
                   <Text style={styles.submitButtonText}>Submit</Text>
                 </TouchableHighlight>
               </View>
-            </View>
-          </View>
-        </View>
-      </Modal>
-      {/* Information Viewing Modal */}
-      <Modal animationType="slide" transparent={true} visible={modal}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalHeaderText}>Transaction Details</Text>
-              <Icon
-                onPress={() => setModal(false)}
-                name="close-circle-outline"
-                size={30}
-                color="#F7A524"
-              />
-            </View>
-            <View style={styles.userInfoContainer}>
-              {user?.image ? (
-                <Image
-                  source={{ uri: `${user?.image}` }}
-                  style={{
-                    width: 80,
-                    height: 80,
-                    borderRadius: 40,
-                    marginRight: 15,
-                  }}
-                />
-              ) : (
-                <Image
-                  source={{
-                    uri: "https://img.freepik.com/premium-vector/handsome-businessman-suit_88465-811.jpg?w=740",
-                  }}
-                  style={{
-                    width: 80,
-                    height: 80,
-                    borderRadius: 40,
-                    marginRight: 15,
-                  }}
-                />
-              )}
-              <Text style={styles.userEmail}>Email: {viewingModal.email}</Text>
-            </View>
-            <View style={styles.transactionInfoContainer}>
-              <Text style={{ color: "#9998A6" }}>
-                Invest Transaction: ${viewingModal?.amount}
-              </Text>
-              <Text style={{ color: "#9998A6" }}>
-                Total Transaction: ${user?.totalBalance}
-              </Text>
-              <Text style={{ color: "#9998A6" }}>
-                Current Transaction: ${user?.currentBalance}
-              </Text>
-              <Text style={{ color: "#9998A6" }}>
-                Date: {moment(viewingModal?.date).format("DD MMM")}
-              </Text>
             </View>
           </View>
         </View>

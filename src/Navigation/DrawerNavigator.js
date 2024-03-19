@@ -20,6 +20,8 @@ import AdminClient from "../Components/Pages/AdminScreen/AdminClient/AdminClient
 import AdminUsers from "../Components/Pages/AdminScreen/AdminUsers/AdminUsers";
 import AdminSettings from "../Components/Pages/AdminScreen/AdminSettings/AdminSettings";
 import { Image } from "react-native";
+import UserWithdrawProfit from "../Components/Pages/UserScreen/UserWithdrawProfit/UserWithdrawProfit";
+import UserProfitHistory from "../Components/Pages/UserScreen/UserProfitHistory/UserProfitHistory";
 
 const Drawer = createDrawerNavigator();
 
@@ -101,6 +103,34 @@ const DrawerNavigator = () => {
             drawerIcon: ({ size, color }) => (
               <Image
                 source={require("../../assets/cash-withdrawal_5024665.png")}
+                style={{ width: size, height: size }}
+              />
+            ),
+          }}
+        />
+      )}
+      {user?.role === "user" && (
+        <Drawer.Screen
+          name="Withdraw Profit"
+          component={UserWithdrawProfit}
+          options={{
+            drawerIcon: ({ size, color }) => (
+              <Image
+                source={require("../../assets/withdraw_money.png")}
+                style={{ width: size, height: size }}
+              />
+            ),
+          }}
+        />
+      )}
+      {user?.role === "user" && (
+        <Drawer.Screen
+          name="Profit History"
+          component={UserProfitHistory}
+          options={{
+            drawerIcon: ({ size, color }) => (
+              <Image
+                source={require("../../assets/profit_history.png")}
                 style={{ width: size, height: size }}
               />
             ),

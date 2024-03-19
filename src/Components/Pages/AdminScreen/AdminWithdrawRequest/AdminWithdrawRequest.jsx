@@ -30,29 +30,7 @@ const AdminWithdrawRequest = ({ navigation }) => {
         setWithdrawRequest(filter);
 
         ToastAndroid.show(data?.message, ToastAndroid.LONG);
-
-        const profit = {
-          name: data?.withdraw?.name,
-          email: data?.withdraw?.email,
-          image: data?.withdraw?.image,
-          phone: data?.withdraw?.phone,
-          address: data?.withdraw?.address,
-          gender: data?.withdraw?.gender,
-          bio: data?.withdraw?.bio,
-          vat: data?.withdraw?.deductionPercentAmount,
-        };
-        adminProfitData(profit);
       }
-    } catch (error) {}
-  };
-
-  const adminProfitData = async (profit) => {
-    try {
-      const saveProfit = await axios.post(
-        `${BaseURL}/api/profit/add-admin-profit`,
-        profit
-      );
-      const data = await saveProfit.data;
     } catch (error) {}
   };
 

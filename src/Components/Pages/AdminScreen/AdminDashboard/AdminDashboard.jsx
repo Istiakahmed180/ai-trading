@@ -167,7 +167,10 @@ const AdminDashboard = ({ navigation }) => {
                 fontSize: 20,
               }}
             >
-              $ {totalAdminiProfit === undefined ? 0 : totalAdminiProfit}
+              ${" "}
+              {totalAdminiProfit === undefined
+                ? 0
+                : totalAdminiProfit.toFixed(2)}
             </Text>
           </View>
           <View
@@ -198,10 +201,12 @@ const AdminDashboard = ({ navigation }) => {
               }}
             >
               ${" "}
-              {vatSumByMonth[0]?.sum === undefined ? 0 : vatSumByMonth[0]?.sum}
+              {vatSumByMonth[0]?.sum === undefined
+                ? 0
+                : vatSumByMonth[0]?.sum.toFixed(2)}
             </Text>
           </View>
-          <View
+          {/* <View
             style={{
               backgroundColor: "#505562",
               paddingVertical: 30,
@@ -230,7 +235,7 @@ const AdminDashboard = ({ navigation }) => {
             >
               $ {totalDeduction}
             </Text>
-          </View>
+          </View> */}
           <View style={styles.container}>
             <Text style={styles.title}>Recent Client</Text>
             {recentUsers.length > 0 ? (

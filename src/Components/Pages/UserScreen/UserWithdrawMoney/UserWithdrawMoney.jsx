@@ -157,26 +157,56 @@ const UserWithdrawMoney = ({ navigation }) => {
                       <Text style={{ color: "orange" }}>${item?.amount}</Text>
                     </Text>
                   </View>
-                  <TouchableOpacity
-                    style={styles.viewButton}
-                    onPress={() => {
-                      setViewModal(true);
-                      setViewModalData(item);
-                    }}
-                  >
-                    <Text style={styles.viewButtonText}>View</Text>
-                  </TouchableOpacity>
+                  {item?.approvalStatus === "pending" ? (
+                    <Text
+                      style={{
+                        color: "yellow",
+                        textAlign: "center",
+                        fontSize: 20,
+                        marginTop: 10,
+                        fontWeight: "600",
+                      }}
+                    >
+                      {item?.approvalStatus}
+                    </Text>
+                  ) : (
+                    <Text
+                      style={{
+                        color: "green",
+                        textAlign: "center",
+                        fontSize: 20,
+                        marginTop: 10,
+                        fontWeight: "600",
+                      }}
+                    >
+                      {item?.approvalStatus}
+                    </Text>
+                  )}
                 </View>
               );
             }}
-            ListEmptyComponent={() => {
-              <View style={styles.information_container}>
-                <Text style={styles.information_text}>
-                  Withdraw Information Not Available
+            ListEmptyComponent={() => (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 18,
+                    textAlign: "center",
+                    marginTop: 40,
+                    color: "red",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Withdraw Money Invormation Not Available
                 </Text>
-              </View>;
-            }}
-            contentContainerStyle={{ marginBottom: 100 }}
+              </View>
+            )}
+            contentContainerStyle={{ paddingBottom: 155 }}
             refreshControl={
               <RefreshControl
                 refreshing={loading}

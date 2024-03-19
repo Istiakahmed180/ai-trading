@@ -18,6 +18,7 @@ const UserDashboard = ({ navigation }) => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [depositData, setDepositData] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
+  const [profitBalance, setProfitBalance] = useState(0);
 
   const fetchData = async () => {
     try {
@@ -29,10 +30,16 @@ const UserDashboard = ({ navigation }) => {
   };
 
   const calculateTotalAmount = () => {
-    const total = depositData?.reduce((sum, currentObject) => {
-      return sum + currentObject?.clientDeposit;
+    const totalDeposit = depositData?.reduce((sum, currentObject) => {
+      return sum + (currentObject?.clientDeposit || 0);
     }, 0);
-    setTotalAmount(total);
+
+    const totalProfit = depositData?.reduce((sum, currentObject) => {
+      return sum + (currentObject?.profit || 0);
+    }, 0);
+
+    setTotalAmount(totalDeposit);
+    setProfitBalance(totalProfit);
   };
 
   const onRefresh = useCallback(() => {
@@ -69,7 +76,7 @@ const UserDashboard = ({ navigation }) => {
       >
         <View style={styles.mainContainer}>
           <View>
-            <Text style={styles.welcomeBackText}>Hi, Welcomeback!</Text>
+            <Text style={styles.welcomeBackText}>Hi, Welcome back!</Text>
             <Text style={styles.userName}>
               {user?.firstName + " " + user?.lastName}
             </Text>
@@ -80,21 +87,21 @@ const UserDashboard = ({ navigation }) => {
             <View style={styles.balanceBox}>
               <Text style={styles.balanceTitle}>Current Balance</Text>
               <Text style={styles.balanceAmount}>
-                ${user?.currentBalance.toFixed(2)}
+                ${user?.currentBalance?.toFixed(2) || "0.00"}
               </Text>
             </View>
             <View style={styles.balanceBox}>
               <Text style={styles.balanceTitle}>Total Deposit</Text>
               <Text style={styles.balanceAmount}>
-                ${totalAmount.toFixed(2)}
+                ${totalAmount.toFixed(2) || "0.00"}
               </Text>
             </View>
           </View>
           <View style={styles.withdrawContainer}>
             <View style={styles.withdrawBox}>
-              <Text style={styles.withdrawTitle}>Daily Profit</Text>
+              <Text style={styles.withdrawTitle}>Profit Balance</Text>
               <Text style={styles.withdrawAmount}>
-                ${user?.withdrawalBalance.toFixed(2)}
+                ${profitBalance.toFixed(2) || "0.00"}
               </Text>
             </View>
           </View>

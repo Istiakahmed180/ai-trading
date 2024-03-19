@@ -1,53 +1,61 @@
-import {
-  View,
-  Text,
-  ToastAndroid,
-  SafeAreaView,
-  TouchableOpacity,
-  ActivityIndicator,
-  FlatList,
-  RefreshControl,
-  Modal,
-  TextInput,
-  TouchableHighlight,
-  StyleSheet,
-  Dimensions,
-} from "react-native";
+// Import necessary modules
 import React, { useContext, useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  Dimensions,
+  FlatList,
+  Modal,
+  RefreshControl,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TextInput,
+  ToastAndroid,
+  TouchableHighlight,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import Header from "../../../Shared/Header/Header";
 import { AuthContext } from "../../../../Context/AuthProvider";
 import axios from "axios";
 import { BaseURL } from "../../../Shared/BaseURL/BaseURL";
-import Header from "../../../Shared/Header/Header";
 import moment from "moment";
 import Icon from "react-native-vector-icons/Ionicons";
 
-const UserDeposit = ({ navigation }) => {
+// Define your component
+const UserWithdrawProfit = ({ navigation }) => {
   const { user } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
   const [modal, setModal] = useState(false);
   const [amount, setAmount] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [depositData, setDepositData] = useState([]);
+  const [profitData, setProfitData] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
 
-  const handleWithdrawDeposit = async (id) => {
+  const handelProfit = async () => {
     try {
-      const withdrawAmount = await axios.put(
-        `${BaseURL}/api/deposit/withdraw-deposit-money?id=${id}`
+      const response = await axios.put(
+        `${BaseURL}/api/deposit/withdraw-profit-money?id=${selectedItem?._id}`,
+        {
+          amount: amount,
+        }
       );
-
-      const data = await withdrawAmount.data;
-      if (data?.type === true) {
-        ToastAndroid.show(data?.message, ToastAndroid.LONG);
+      if (response?.data.type === true) {
+        ToastAndroid.show(response.data?.message, ToastAndroid.LONG);
 
         const adminProfit = {
-          name: data?.data?.name,
-          email: data?.data?.email,
-          vat: data?.data?.profitPercentAmount,
+          name: response?.data?.profit?.name,
+          email: response?.data?.profit?.email,
+          vat: response?.data?.profit?.profitPercentAmount,
         };
         adminProfitData(adminProfit);
+        setModal(false);
       } else {
-        ToastAndroid.show(data?.message, ToastAndroid.LONG);
+        ToastAndroid.show(response.data?.message, ToastAndroid.LONG);
       }
-    } catch (error) {}
+      setModal(false);
+    } catch (error) {
+      console.log("Error withdrawing profit:", error);
+    }
   };
 
   const adminProfitData = async (adminProfit) => {
@@ -60,40 +68,7 @@ const UserDeposit = ({ navigation }) => {
     } catch (error) {}
   };
 
-  const handelDeposit = () => {
-    const userData = {
-      name: user?.firstName + " " + user?.lastName,
-      email: user?.email,
-      image: user?.image,
-      phone: user?.phone,
-      address: user?.address,
-      gender: user?.gender,
-      amount: parseFloat(amount),
-      bio: user?.bio,
-      depositTotalBalance: 0,
-      depositCurrentBalance: 0,
-      profit: 0,
-    };
-    sendingDepositData(userData);
-  };
-
-  const sendingDepositData = async (userData) => {
-    try {
-      const sendData = await axios.post(
-        `${BaseURL}/api/deposit/add-deposit-transaction`,
-        userData
-      );
-      const data = await sendData.data;
-
-      if (data.type === true) {
-        ToastAndroid.show(data?.message, ToastAndroid.LONG);
-        setModal(false);
-      } else {
-        ToastAndroid.show(data?.message, ToastAndroid.LONG);
-      }
-    } catch (err) {}
-  };
-
+  // Function to handle refreshing data
   const handleRefreshing = async () => {
     setLoading(true);
     try {
@@ -101,49 +76,26 @@ const UserDeposit = ({ navigation }) => {
         `${BaseURL}/api/deposit/get-deposit-transaction?email=${user?.email}`
       );
       const data = await userDepositData.data;
-      setDepositData(data?.data);
-    } catch (err) {}
+      setProfitData(data?.data);
+    } catch (err) {
+      // Handle error
+      console.error(err);
+    }
     setLoading(false);
   };
 
+  // Fetch data on component mount
   useEffect(() => {
     handleRefreshing();
   }, []);
 
+  // Render UI
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#323343" }}>
       {/* Header Section */}
       <Header navigation={navigation} />
 
-      {/* Body Section */}
       <View>
-        <View
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            marginTop: 10,
-          }}
-        >
-          <TouchableOpacity
-            onPress={() => setModal(true)}
-            style={{
-              backgroundColor: "#3C58FA",
-              padding: 10,
-              borderRadius: 10,
-            }}
-          >
-            <Text
-              style={{
-                fontWeight: "bold",
-                color: "white",
-                fontSize: 15,
-                textAlign: "center",
-              }}
-            >
-              Deposit Money
-            </Text>
-          </TouchableOpacity>
-        </View>
         <View
           style={{
             backgroundColor: "#1E3A8A",
@@ -162,10 +114,11 @@ const UserDeposit = ({ navigation }) => {
               fontWeight: "700",
             }}
           >
-            Deposit Money Transaction
+            Withdraw Profit Balance
           </Text>
         </View>
 
+        {/* Loading indicator or profit list */}
         {loading ? (
           <ActivityIndicator
             style={styles.loader}
@@ -174,10 +127,10 @@ const UserDeposit = ({ navigation }) => {
           />
         ) : (
           <FlatList
-            data={depositData}
+            data={profitData}
             keyExtractor={(item) => item._id}
             renderItem={({ item }) => {
-              const formatedDate = moment(item?.withdrawDate).format(
+              const formatedDate = moment(item?.profitWithdrawDate).format(
                 "YYYY-MM-DD"
               );
               const currentDate = moment();
@@ -187,36 +140,29 @@ const UserDeposit = ({ navigation }) => {
               return (
                 <View style={styles.container}>
                   <View>
-                    {item.depositAmount ? (
-                      <Text
-                        style={{
-                          color: "#002f80",
-                          fontSize: 18,
-                          fontWeight: "bold",
-                        }}
-                      >
-                        Withdraw Amount: $
-                        {parseFloat(item.depositAmount).toFixed(2)}
+                    <Text style={styles.amountText}>
+                      Current Deposit Balance:{" "}
+                      <Text style={{ color: "orange" }}>
+                        ${item.amount.toFixed(2)}
                       </Text>
-                    ) : (
-                      <Text style={styles.amountText}>
-                        Amount:{" "}
-                        <Text style={{ color: "orange" }}>
-                          ${item.amount.toFixed(2)}
-                        </Text>
+                    </Text>
+                    <Text style={styles.amountText}>
+                      Profit Balance:{" "}
+                      <Text style={{ color: "orange" }}>
+                        ${item.profit.toFixed(2)}
                       </Text>
-                    )}
-                    <Text style={styles.dateText}>
-                      Withdraw Date:{" "}
-                      {moment(item.withdrawDate).format("DD MMM YYYY")}
+                    </Text>
+
+                    <Text style={styles.additionalText}>
+                      Client Deposit: ${item.clientDeposit.toFixed(2)}
+                    </Text>
+                    <Text style={styles.additionalText}>
+                      Withdraw Profit Date:{" "}
+                      {moment(item.profitWithdrawDate).format("DD MMM YYYY")}
                     </Text>
                   </View>
                   <View>
-                    {item.depositAmount ? (
-                      <TouchableOpacity style={styles.completeButton} disabled>
-                        <Text style={styles.completeButtonText}>Complete</Text>
-                      </TouchableOpacity>
-                    ) : (
+                    {item?.amount > 0 && (
                       <TouchableOpacity
                         style={[
                           styles.button,
@@ -225,7 +171,10 @@ const UserDeposit = ({ navigation }) => {
                             : { backgroundColor: "#991B1B" },
                         ]}
                         disabled={!isBeforeCurrentDate}
-                        onPress={() => handleWithdrawDeposit(item?._id)}
+                        onPress={() => {
+                          setSelectedItem(item);
+                          setModal(true);
+                        }}
                       >
                         {!isBeforeCurrentDate ? (
                           <Text
@@ -234,10 +183,10 @@ const UserDeposit = ({ navigation }) => {
                               { color: "lightgrey", fontWeight: "bold" },
                             ]}
                           >
-                            Withdraw
+                            Withdraw Profit
                           </Text>
                         ) : (
-                          <Text style={styles.buttonText}>Withdraw Now</Text>
+                          <Text style={styles.buttonText}>Withdraw Profit</Text>
                         )}
                       </TouchableOpacity>
                     )}
@@ -246,27 +195,13 @@ const UserDeposit = ({ navigation }) => {
               );
             }}
             ListEmptyComponent={() => (
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: 18,
-                    textAlign: "center",
-                    marginTop: 40,
-                    color: "red",
-                    fontWeight: "bold",
-                  }}
-                >
-                  Deposit Money Invormation Not Available
+              <View style={styles.information_container}>
+                <Text style={styles.information_text}>
+                  Profit Information Not Available
                 </Text>
               </View>
             )}
-            contentContainerStyle={{ paddingBottom: 155 }}
+            contentContainerStyle={{ paddingBottom: 165 }}
             refreshControl={
               <RefreshControl
                 refreshing={loading}
@@ -277,7 +212,7 @@ const UserDeposit = ({ navigation }) => {
           />
         )}
       </View>
-      {/* Deposit Money Modal */}
+
       <Modal animationType="fade" transparent={true} visible={modal}>
         <View
           style={{
@@ -304,7 +239,7 @@ const UserDeposit = ({ navigation }) => {
               }}
             >
               <Text style={{ fontSize: 18, fontWeight: "500", color: "white" }}>
-                Deposit Money
+                Withdraw Profit Balance
               </Text>
               <Icon
                 onPress={() => setModal(false)}
@@ -323,7 +258,7 @@ const UserDeposit = ({ navigation }) => {
                   marginBottom: 10,
                 }}
                 keyboardType="email-address"
-                placeholder={user.email}
+                placeholder={user?.email}
                 editable={false}
                 placeholderTextColor={"#BEBFC1"}
               />
@@ -343,7 +278,7 @@ const UserDeposit = ({ navigation }) => {
               />
               <View style={{ justifyContent: "center", alignItems: "center" }}>
                 <TouchableHighlight
-                  onPress={handelDeposit}
+                  onPress={handelProfit}
                   style={{
                     backgroundColor: "blue",
                     borderRadius: 5,
@@ -371,7 +306,27 @@ const UserDeposit = ({ navigation }) => {
   );
 };
 
+// Styles
 const styles = StyleSheet.create({
+  loader: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 20,
+  },
+  buttonText: {
+    color: "white",
+    fontSize: 15,
+    fontWeight: "500",
+  },
+  button: {
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+    transform: [{ scale: 1.05 }],
+  },
   container: {
     backgroundColor: "#616672",
     padding: 16,
@@ -387,28 +342,14 @@ const styles = StyleSheet.create({
   },
   dateText: {
     fontSize: 16,
-    marginBottom: 16,
+    marginBottom: 8,
     color: "#BABBBC",
     fontWeight: "500",
   },
-  loader: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 20,
-  },
-  button: {
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-    alignItems: "center",
-    justifyContent: "center",
-    transform: [{ scale: 1.05 }],
-  },
-  buttonText: {
-    color: "white",
-    fontSize: 15,
-    fontWeight: "500",
+  additionalText: {
+    fontSize: 16,
+    marginBottom: 8,
+    color: "#BABBBC",
   },
   completeButton: {
     backgroundColor: "green",
@@ -417,11 +358,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: "center",
     justifyContent: "center",
-  },
-  completeButtonText: {
-    color: "white",
-    fontSize: 15,
-    fontWeight: "500",
   },
   information_container: {
     flex: 1,
@@ -435,6 +371,11 @@ const styles = StyleSheet.create({
     color: "red",
     fontWeight: "bold",
   },
+  completeButtonText: {
+    color: "white",
+    fontSize: 15,
+    fontWeight: "500",
+  },
 });
 
-export default UserDeposit;
+export default UserWithdrawProfit;
